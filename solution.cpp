@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
  * Copyright &copy; 2015 Ben Blazak <bblazak@fullerton.edu>
- *                  2015 TODO(your name) <TODO(your email)>
+ *                  2015 Venedicto Herrera venedicto@csu.fullerton.edu
  * Released under the [MIT License] (http://opensource.org/licenses/MIT)
  * ------------------------------------------------------------------------- */
 
@@ -75,29 +75,29 @@ void sieve(const int size, bool primes[]);
  * Returns:
  * - 0 on success, or -1 on error.
  */
-int write_primes( const int size,
-                  bool primes[],
-                  const string& infilename,
-                  const string& outfilename );
+int write_primes(const int size,
+        bool primes[],
+        const string& infilename,
+        const string& outfilename);
 
 /**
  * Read numbers from `infilename`, and if they are composite, output them to
  * `outfilename`, separated by newlines.
  *
  * Arguments:
- * - `size`: The size of (the number of elements in) the array.
- * - `primes`: An array of boolean values, with each element set to `true` if
+ *-`size`: The size of(the number of elements in) the array.
+ * -`primes`: An array of boolean values, with each element set to `true` if
  *   its index is prime, and `false` otherwise.
- * - `infilename`: A string representing the file path to read from.
- * - `outfilename`: A string representing the file path to write to.
+ * -`infilename`: A string representing the file path to read from.
+ * -`outfilename`: A string representing the file path to write to.
  *
  * Returns:
- * - 0 on success, or -1 on error.
+ *-0 on success, or - 1 on error.
  */
-int write_composites( const int size,
-                      bool primes[],
-                      const string& infilename,
-                      const string& outfilename );
+int write_composites(const int size,
+        bool primes[],
+        const string& infilename,
+        const string& outfilename);
 
 // ----------------------------------------------------------------------------
 
@@ -105,30 +105,110 @@ int main() {
     int max = find_max("input.txt");
     if (max == -1) {
         cout << "ERROR in `find_max()`" << endl;
-        return 1;  // error
+        return 1; // error
     }
 
-    bool primes[max+1];
-    sieve(max+1, primes);
+    bool primes[max + 1];
+    sieve(max + 1, primes);
 
-    int ret;  // for storing return values, to check for error codes
+    int ret; // for storing return values, to check for error codes
     //
-    ret = write_primes(max+1, primes, "input.txt", "primes.txt");
+    ret = write_primes(max + 1, primes, "input.txt", "primes.txt");
     if (ret == -1) {
         cout << "ERROR in `write_primes()`" << endl;
-        return 1;  // error
+        return 1; // error
     }
     //
-    ret = write_composites(max+1, primes, "input.txt", "composites.txt");
+    ret = write_composites(max + 1, primes, "input.txt", "composites.txt");
     if (ret == -1) {
         cout << "ERROR in `write_composites()`" << endl;
-        return 1;  // error
+        return 1; // error
     }
 
-    return 0;  // success
+    return 0; // success
 }
 
-// ----------------------------------------------------------------------------
+int find_max(const string& infilename) {
 
-// TODO: write prototyped functions
+    ifstream infile(infilename.c_str());
+    if (!infile.is_open())
+        return -1;
 
+    int max = -1;
+    int n;
+    infile >> n;
+    while (infile.good()) {
+        if (n > max)
+            max = n;
+
+        infile >> n;
+    }
+    return max;
+}
+
+void sieve(const int size, bool primes[]) {
+    int currentIndex = 3;
+
+    primes[0] = 0;
+    primes[1] = 0;
+    primes[2] = 1;
+
+    for (currentIndex; currentIndex < size; currentIndex++) {
+        for (int i = 2; i < currentIndex; i++) {
+            if (currentIndex % i == 0) {
+                primes[currentIndex] = 0;
+                break;
+            } else {
+                primes[currentIndex] = 1;
+            }
+        }
+    }
+
+
+
+}
+
+int write_primes(const int size, bool primes[], const string& infilename, const string& outfilename){
+  
+    ifstream infile(infilename.c_str());
+    if(! infile.is_open())
+        return -1;
+    
+    
+    ofstream opfile(outfilename.c_str());
+    if(! opfile.is_open())
+        return -1;
+    
+    int n;
+    infile >> n;
+    while(infile.good()){
+        if(primes[n] == 1)
+            opfile << n << " " << endl;
+        infile >> n;
+    }
+    
+    
+    
+    
+}
+
+int write_composites(const int size, bool primes[], const string& infilename, const string& outfilename){
+    
+    ifstream infile(infilename.c_str());
+    if(! infile.is_open())
+        return -1;
+    
+    ofstream opfile(outfilename.c_str());
+    if(! opfile.is_open())
+        return -1;
+    
+    int n;
+    infile >> n;
+    while(infile.good()){
+        if(primes[n] == 0)
+            opfile << n << " " << endl;
+        infile >> n;
+    }
+    
+    
+}
